@@ -274,6 +274,10 @@ const APP = {
 </script>
 <script>
 /* data.js — весь учебный контент: темы, задания, теоремы, достижения */
+/* Вспомогательная функция для параметрической генерации заданий (task.generate) —
+   даёт случайное целое в диапазоне [min,max] включительно. */
+function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
 const GAME = {
 
   worlds: [
@@ -486,7 +490,11 @@ const GAME = {
           explain: "Вершина — это точка, из которой выходят обе стороны угла (оба луча)." },
         { id: "g7_ch1_s2_2", type: "input", difficulty: "medium", q: "Развёрнутый угол разделили лучом на два угла, один из которых равен 65°. Чему равен второй?",
           answer: 115, tol: 0.5, unit: "°",
-          explain: "Развёрнутый угол равен 180°, поэтому второй угол = 180° − 65° = 115°." },
+          explain: "Развёрнутый угол равен 180°, поэтому второй угол = 180° − 65° = 115°.",
+          generate() {
+            const a = randInt(15, 165);
+            return { q: `Развёрнутый угол разделили лучом на два угла, один из которых равен ${a}°. Чему равен второй?`, answer: 180 - a, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch1_s2_3", type: "choice", difficulty: "easy", q: "Как правильно обозначить угол с вершиной в точке O и сторонами OA, OB?",
           options: ["AB", "∠AOB", "OAB (без угла)", "AOB (отрезок)"], correct: 1,
           explain: "Вершину пишут в середине обозначения: ∠AOB — сначала точка на одной стороне, потом вершина, потом точка на другой стороне." },
@@ -500,7 +508,11 @@ const GAME = {
           explain: "У луча только одно начало и нет конца — он бесконечно продолжается в одну сторону, в этом его отличие от отрезка." },
         { id: "g7_ch1_s2_5", type: "input", difficulty: "medium", q: "Угол AOB — развёрнутый. Внутри него провели луч OK. ∠AOK = 70°. Чему равен ∠KOB?",
           answer: 110, tol: 0.5, unit: "°",
-          explain: "∠AOK + ∠KOB = 180° (развёрнутый угол), значит ∠KOB = 180° − 70° = 110°." },
+          explain: "∠AOK + ∠KOB = 180° (развёрнутый угол), значит ∠KOB = 180° − 70° = 110°.",
+          generate() {
+            const a = randInt(10, 170);
+            return { q: `Угол AOB — развёрнутый. Внутри него провели луч OK. ∠AOK = ${a}°. Чему равен ∠KOB?`, answer: 180 - a, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch1_s2_6", type: "choice", difficulty: "easy", q: "Может ли угол быть образован двумя лучами, лежащими на одной прямой и направленными в одну и ту же сторону?",
           options: ["Да, это будет развёрнутый угол", "Нет, это не угол, а один луч", "Да, это будет прямой угол", "Да, это будет острый угол"], correct: 1,
           explain: "Если оба луча совпадают по направлению, они просто накладываются друг на друга — угла (как фигуры из двух различных лучей) не образуется." },
@@ -560,19 +572,31 @@ const GAME = {
       tasks: [
         { id: "g7_ch1_s3_1", type: "input", difficulty: "medium", q: "Угол AOB равен 76°. Луч OK — биссектриса этого угла. Чему равен угол AOK?",
           answer: 38, tol: 0.5, unit: "°",
-          explain: "Биссектриса делит угол пополам: 76° / 2 = 38°." },
+          explain: "Биссектриса делит угол пополам: 76° / 2 = 38°.",
+          generate() {
+            const full = randInt(4, 89) * 2; // чётное, чтобы делилось ровно
+            return { q: `Угол AOB равен ${full}°. Луч OK — биссектриса этого угла. Чему равен угол AOK?`, answer: full / 2, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch1_s3_2", type: "explore", difficulty: "medium", q: "Подвигай лучи угла на чертеже и включи биссектрису. Что происходит с двумя половинками угла, когда сам угол меняется?",
           hints: ["Сравни величины половин с величиной всего угла", "Проверь, всегда ли обе половины равны между собой"],
           figure: { type: "angle" } },
         { id: "g7_ch1_s3_3", type: "input", difficulty: "medium", q: "Биссектриса угла AOB делит его на два угла по 42° каждый. Чему был равен угол AOB?",
           answer: 84, tol: 0.5, unit: "°",
-          explain: "Раз биссектриса делит угол на две равные части по 42°, весь угол вдвое больше: 42° × 2 = 84°." },
+          explain: "Раз биссектриса делит угол на две равные части по 42°, весь угол вдвое больше: 42° × 2 = 84°.",
+          generate() {
+            const half = randInt(5, 89);
+            return { q: `Биссектриса угла AOB делит его на два угла по ${half}° каждый. Чему был равен угол AOB?`, answer: half * 2, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch1_s3_4", type: "choice", difficulty: "easy", q: "Что значит, что два отрезка равны?",
           options: ["У них одинаковый цвет на чертеже", "Их можно совместить наложением", "Они лежат на одной прямой", "Они выходят из одной точки"], correct: 1,
           explain: "Равенство фигур в геометрии определяется именно через возможность совмещения наложением." },
         { id: "g7_ch1_s3_5", type: "input", difficulty: "medium", q: "Точка M — середина отрезка AB. AB = 18 см. Чему равен AM?",
           answer: 9, tol: 0.2, unit: "см",
-          explain: "Середина делит отрезок на две равные части: 18 / 2 = 9 см." },
+          explain: "Середина делит отрезок на две равные части: 18 / 2 = 9 см.",
+          generate() {
+            const ab = randInt(2, 60) * 2;
+            return { q: `Точка M — середина отрезка AB. AB = ${ab} см. Чему равен AM?`, answer: ab / 2, tol: 0.2, unit: "см" };
+          } },
         { id: "g7_ch1_s3_6", type: "choice", difficulty: "easy", q: "Как называется точка, которая делит отрезок на два равных отрезка?",
           options: ["Вершина", "Середина отрезка", "Биссектриса", "Начало отрезка"], correct: 1,
           explain: "«Биссектриса» — это термин для угла (луч), а для отрезка аналогичное понятие — середина." },
@@ -632,13 +656,25 @@ const GAME = {
       tasks: [
         { id: "g7_ch1_s4_1", type: "input", difficulty: "medium", q: "Точка B лежит между точками A и C. AB = 7 см, BC = 5 см. Найди AC.",
           answer: 12, tol: 0.2, unit: "см",
-          explain: "AC = AB + BC = 7 + 5 = 12 см." },
+          explain: "AC = AB + BC = 7 + 5 = 12 см.",
+          generate() {
+            const ab = randInt(2, 25), bc = randInt(2, 25);
+            return { q: `Точка B лежит между точками A и C. AB = ${ab} см, BC = ${bc} см. Найди AC.`, answer: ab + bc, tol: 0.2, unit: "см" };
+          } },
         { id: "g7_ch1_s4_2", type: "input", difficulty: "medium", q: "AC = 20 см, точка B между A и C, причём AB в 3 раза больше BC. Найди BC.",
           answer: 5, tol: 0.2, unit: "см",
-          explain: "Пусть BC = x, тогда AB = 3x. Сумма: 3x + x = 20 → 4x = 20 → x = 5 см." },
+          explain: "Пусть BC = x, тогда AB = 3x. Сумма: 3x + x = 20 → 4x = 20 → x = 5 см.",
+          generate() {
+            const k = randInt(2, 5), bc = randInt(2, 12), ac = (k + 1) * bc;
+            return { q: `AC = ${ac} см, точка B между A и C, причём AB в ${k} раза больше BC. Найди BC.`, answer: bc, tol: 0.2, unit: "см" };
+          } },
         { id: "g7_ch1_s4_3", type: "input", difficulty: "medium", q: "AC = 15 см, AB = 9 см. Точка B лежит между A и C. Найди BC.",
           answer: 6, tol: 0.2, unit: "см",
-          explain: "Из AC = AB + BC получаем BC = AC − AB = 15 − 9 = 6 см." },
+          explain: "Из AC = AB + BC получаем BC = AC − AB = 15 − 9 = 6 см.",
+          generate() {
+            const bc = randInt(2, 20), ab = randInt(2, 20), ac = ab + bc;
+            return { q: `AC = ${ac} см, AB = ${ab} см. Точка B лежит между A и C. Найди BC.`, answer: bc, tol: 0.2, unit: "см" };
+          } },
         { id: "g7_ch1_s4_4", type: "choice", difficulty: "easy", q: "Точка B лежит между точками A и C. Какое равенство верно?",
           options: ["AB = AC + BC", "AC = AB + BC", "BC = AB + AC", "AB = BC — AC"], correct: 1,
           explain: "Весь отрезок AC равен сумме его частей AB и BC." },
@@ -727,13 +763,21 @@ const GAME = {
       tasks: [
         { id: "g7_ch1_s5_1", type: "input", difficulty: "medium", q: "Луч OB проходит между сторонами угла AOC. ∠AOB = 34°, ∠BOC = 48°. Найди ∠AOC.",
           answer: 82, tol: 0.5, unit: "°",
-          explain: "∠AOC = ∠AOB + ∠BOC = 34° + 48° = 82°." },
+          explain: "∠AOC = ∠AOB + ∠BOC = 34° + 48° = 82°.",
+          generate() {
+            const a = randInt(5, 90), b = randInt(5, 90);
+            return { q: `Луч OB проходит между сторонами угла AOC. ∠AOB = ${a}°, ∠BOC = ${b}°. Найди ∠AOC.`, answer: a + b, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch1_s5_2", type: "choice", difficulty: "easy", q: "Как называется угол величиной 128°?",
           options: ["Острый", "Прямой", "Тупой", "Развёрнутый"], correct: 2,
           explain: "128° больше 90°, но меньше 180° — это признак тупого угла." },
         { id: "g7_ch1_s5_3", type: "input", difficulty: "medium", q: "∠AOC = 90°. Луч OB проходит между сторонами угла AOC, ∠AOB = 34°. Найди ∠BOC.",
           answer: 56, tol: 0.5, unit: "°",
-          explain: "∠BOC = ∠AOC − ∠AOB = 90° − 34° = 56°." },
+          explain: "∠BOC = ∠AOC − ∠AOB = 90° − 34° = 56°.",
+          generate() {
+            const total = randInt(2, 8) * 10, part = randInt(1, total - 1);
+            return { q: `∠AOC = ${total}°. Луч OB проходит между сторонами угла AOC, ∠AOB = ${part}°. Найди ∠BOC.`, answer: total - part, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch1_s5_4", type: "choice", difficulty: "easy", q: "Каким инструментом измеряют градусную меру угла?",
           options: ["Линейкой", "Циркулем", "Транспортиром", "Угольником"], correct: 2,
           explain: "Линейкой измеряют длины отрезков, а транспортиром — градусную меру углов." },
@@ -813,13 +857,22 @@ const GAME = {
       tasks: [
         { id: "g7_ch1_s6_1", type: "input", difficulty: "medium", q: "Один из смежных углов равен 47°. Найди второй.",
           answer: 133, tol: 0.5, unit: "°",
-          explain: "Сумма смежных углов = 180°, значит второй угол = 180° − 47° = 133°." },
+          explain: "Сумма смежных углов = 180°, значит второй угол = 180° − 47° = 133°.",
+          generate() {
+            const a = randInt(10, 170);
+            return { q: `Один из смежных углов равен ${a}°. Найди второй.`, answer: 180 - a, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch1_s6_2", type: "choice", difficulty: "easy", q: "Что можно сказать про вертикальные углы?",
           options: ["Они всегда смежные", "Они всегда равны", "Их сумма всегда 90°", "Они всегда острые"], correct: 1,
           explain: "Это одно из основных свойств: вертикальные углы (стороны одного — продолжение сторон другого) всегда равны." },
         { id: "g7_ch1_s6_3", type: "input", difficulty: "medium", q: "Один из смежных углов в 2 раза больше другого. Найди меньший угол.",
           answer: 60, tol: 0.5, unit: "°",
-          explain: "Пусть меньший угол x, тогда больший 2x. x + 2x = 180 → 3x = 180 → x = 60°." },
+          explain: "Пусть меньший угол x, тогда больший 2x. x + 2x = 180 → 3x = 180 → x = 60°.",
+          generate() {
+            const k = randInt(2, 8);
+            const x = 180 / (k + 1);
+            return { q: `Один из смежных углов в ${k} раза больше другого. Найди меньший угол.`, answer: x, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch1_s6_4", type: "choice", difficulty: "easy", q: "Угол, смежный с прямым углом, — какой?",
           options: ["Тоже прямой", "Обязательно тупой", "Обязательно острый", "Развёрнутый"], correct: 0,
           explain: "180° − 90° = 90° — угол, смежный с прямым, тоже равен 90°." },
@@ -1400,7 +1453,11 @@ const GAME = {
         { id: "g7_ch4_s1_1", type: "input", difficulty: "easy",
           q: "В треугольнике два угла равны 72° и 53°. Найди третий угол.",
           answer: 55, tol: 0.5, unit: "°",
-          explain: "180° − 72° − 53° = 55°." },
+          explain: "180° − 72° − 53° = 55°.",
+          generate() {
+            const a = randInt(20, 100), b = randInt(20, 170 - a);
+            return { q: `В треугольнике два угла равны ${a}° и ${b}°. Найди третий угол.`, answer: 180 - a - b, tol: 0.5, unit: "°" };
+          } },
         { id: "g7_ch4_s1_2", type: "choice", difficulty: "easy",
           q: "В треугольнике один из углов равен 95°. Как называется такой треугольник?",
           options: ["Остроугольный", "Прямоугольный", "Тупоугольный", "Равносторонний"], correct: 2,
@@ -2060,7 +2117,11 @@ const GAME = {
         { id: "g8_ch6_s2_1", type: "input", difficulty: "easy",
           q: "Основание параллелограмма 9 см, высота к нему 4 см. Найди площадь.",
           answer: 36, tol: 0.5, unit: "см²",
-          explain: "S=a·h=9×4=36 см²." },
+          explain: "S=a·h=9×4=36 см².",
+          generate() {
+            const a = randInt(3, 20), h = randInt(3, 20);
+            return { q: `Основание параллелограмма ${a} см, высота к нему ${h} см. Найди площадь.`, answer: a * h, tol: 0.5, unit: "см²" };
+          } },
         { id: "g8_ch6_s2_2", type: "input", difficulty: "easy",
           q: "Основание треугольника 10 см, высота 7 см. Найди площадь.",
           answer: 35, tol: 0.5, unit: "см²",
@@ -2147,7 +2208,13 @@ const GAME = {
         { id: "g8_ch6_s3_1", type: "input", difficulty: "easy",
           q: "Катеты прямоугольного треугольника 6 см и 8 см. Найди гипотенузу.",
           answer: 10, tol: 0.2, unit: "см",
-          explain: "c=√(6²+8²)=√(36+64)=√100=10 см." },
+          explain: "c=√(6²+8²)=√(36+64)=√100=10 см.",
+          generate() {
+            const triples = [[3, 4, 5], [6, 8, 10], [5, 12, 13], [9, 12, 15], [8, 15, 17], [7, 24, 25], [20, 21, 29]];
+            const [a, b, c] = triples[randInt(0, triples.length - 1)];
+            const k = randInt(1, 3);
+            return { q: `Катеты прямоугольного треугольника ${a * k} см и ${b * k} см. Найди гипотенузу.`, answer: c * k, tol: 0.3, unit: "см" };
+          } },
         { id: "g8_ch6_s3_2", type: "input", difficulty: "medium",
           q: "Гипотенуза 25 см, один катет 7 см. Найди второй катет.",
           answer: 24, tol: 0.3, unit: "см",
@@ -2482,7 +2549,12 @@ const GAME = {
         { id: "g8_ch7_s4_1", type: "input", difficulty: "easy",
           q: "В прямоугольном треугольнике катет напротив угла α равен 3, гипотенуза 5. Найди sin α.",
           answer: 0.6, tol: 0.02, unit: "",
-          explain: "sin α = 3/5 = 0,6." },
+          explain: "sin α = 3/5 = 0,6.",
+          generate() {
+            const triples = [[3, 4, 5], [6, 8, 10], [5, 12, 13], [9, 12, 15], [8, 15, 17]];
+            const [a, , c] = triples[randInt(0, triples.length - 1)];
+            return { q: `В прямоугольном треугольнике катет напротив угла α равен ${a}, гипотенуза ${c}. Найди sin α.`, answer: Math.round((a / c) * 1000) / 1000, tol: 0.02, unit: "" };
+          } },
         { id: "g8_ch7_s4_2", type: "choice", difficulty: "easy",
           q: "Чему равен sin 30°?",
           options: ["0,5", "√2/2", "√3/2", "1"], correct: 0,
@@ -3397,7 +3469,7 @@ const BUILDERS = {
       Figures.label(ctx, C, "C", { dy: -12 });
       Figures.label(ctx, K, "K", { dy: -12, color: "#199a53" });
       const a1 = Geo.angleDeg(O, A, K), a2 = Geo.angleDeg(O, K, C);
-      Figures.label(ctx, { x: w / 2, y: h * 0.08 }, `∠AOK = ${Geo.fmt(a1)}°   ∠KOC = ${Geo.fmt(a2)}°`, { color: Geo.ink() });
+      Figures.wrapText(ctx, `∠AOK = ${Geo.fmt(a1)}°   ∠KOC = ${Geo.fmt(a2)}°`, w / 2, h * 0.08, w * 0.92, { color: Geo.ink() });
     }
     const unbind = Figures.wireDrag(canvas, pts, render);
     return {
@@ -3739,8 +3811,9 @@ const BUILDERS = {
         ctx.beginPath(); ctx.arc(X2.x, X2.y, 26, dB, dS2, Geo.arcSweep(dB, dS2)); ctx.strokeStyle = "#8b5cf6"; ctx.lineWidth = 2.5; ctx.stroke();
         parallel = Math.abs(angle1 - angle2) <= 1.5;
         Figures.wrapText(ctx, `Соответственные углы: ${Geo.fmt(angle1)}° и ${Geo.fmt(angle2)}°`, w / 2, h * 0.14, w * 0.92, { color: "#8b5cf6", font: "600 13px Rubik, sans-serif" });
-        Figures.label(ctx, { x: w / 2, y: h * 0.9 },
+        Figures.wrapText(ctx,
           parallel ? "✓ Углы равны ⟹ прямые a и b параллельны" : "✗ Углы не равны ⟹ прямые a и b НЕ параллельны",
+          w / 2, h * 0.9, w * 0.94,
           { color: parallel ? "#199a53" : "#c9740f", font: "700 13px Rubik, sans-serif" });
       }
     }
@@ -3819,7 +3892,7 @@ const BUILDERS = {
       Figures.dot(ctx, A); Figures.dot(ctx, B); Figures.dot(ctx, R1, { r: 5, fill: "#8b93d6" }); Figures.dot(ctx, R2, { r: 5, fill: "#8b93d6" });
       Figures.label(ctx, A, "A", { dy: 18 }); Figures.label(ctx, B, "B", { dy: 18 });
       const abU = ab / Geo.UNIT, raU = ra / Geo.UNIT, rbU = rb / Geo.UNIT;
-      Figures.label(ctx, { x: w / 2, y: h * 0.06 }, `AB=${Geo.fmt(abU)}, AC=${Geo.fmt(rbU)}, BC=${Geo.fmt(raU)}`, { color: Geo.ink() });
+      Figures.wrapText(ctx, `AB=${Geo.fmt(abU)}, AC=${Geo.fmt(rbU)}, BC=${Geo.fmt(raU)}`, w / 2, h * 0.06, w * 0.92, { color: Geo.ink() });
       Figures.wrapText(ctx, canForm ? "✓ Окружности пересекаются — треугольник существует" : "✗ Не пересекаются — сумма двух сторон не больше третьей, треугольник невозможен",
         w / 2, h * 0.92, w * 0.94,
         { color: canForm ? "#199a53" : "#c9740f", font: "700 12px Rubik, sans-serif" });
@@ -5069,7 +5142,13 @@ function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2)
 const ANIMATORS = {
   /* --- Теорема Пифагора: квадраты на сторонах заполняются по очереди --- */
   pythagoras(ctx, canvas, w, h) {
-    const C = { x: w * 0.28, y: h * 0.78 }, A = { x: w * 0.68, y: h * 0.78 }, B = { x: w * 0.28, y: h * 0.30 };
+    // Раскладка через общий масштаб S=min(w,h): раньше катеты считались отдельно от w
+    // и от h, и на непропорциональном холсте (например, узком и высоком) квадраты на
+    // катетах выходили за границы canvas — это и было видно как "рисунок вылезает".
+    const S = Math.min(w, h);
+    const legB = S * 0.30, legA = S * 0.38; // горизонтальный (C→A) и вертикальный (B→C) катеты
+    const marginL = legA + 14, marginBottom = legB + 40;
+    const C = { x: marginL, y: h - marginBottom }, A = { x: C.x + legB, y: C.y }, B = { x: C.x, y: C.y - legA };
     let t0 = null, prog = 0, playing = false;
     function squareOn(p1, p2, sign) {
       const dx = p2.x - p1.x, dy = p2.y - p1.y;
@@ -5135,6 +5214,7 @@ const ANIMATORS = {
       ctx.beginPath(); ctx.moveTo(baseX0, baseY); ctx.lineTo(baseX0 + baseLen, baseY); ctx.stroke();
       const angA = Geo.angleDeg(A, B, C), angB = Geo.angleDeg(B, A, C), angC = Geo.angleDeg(C, A, B);
       const angs = [{ v: angA, color: "#5b6bd6", name: "A" }, { v: angB, color: "#ff9f43", name: "B" }, { v: angC, color: "#2ecc71", name: "C" }];
+      const wedgeR = Math.min(46, baseLen / 8); // ограничиваем радиус доступной длиной базовой линии
       let cursor = baseX0;
       angs.forEach((a) => {
         const rad = a.v * Math.PI / 180;
@@ -5143,12 +5223,12 @@ const ANIMATORS = {
         const cx = cursor, cy = baseY;
         ctx.beginPath();
         ctx.moveTo(cx, cy);
-        ctx.arc(cx, cy, 46, Math.PI, Math.PI - rad * localProg, true);
+        ctx.arc(cx, cy, wedgeR, Math.PI, Math.PI - rad * localProg, true);
         ctx.closePath();
         ctx.fillStyle = a.color + "55";
         ctx.fill();
         ctx.strokeStyle = a.color; ctx.lineWidth = 1.5; ctx.stroke();
-        cursor += 46 * Math.sin(rad * localProg) * 1.15 + 4;
+        cursor += wedgeR * Math.sin(rad * localProg) * 1.15 + 4;
       });
       if (prog >= 1) {
         Figures.wrapText(ctx, `∠A+∠B+∠C = ${Geo.fmt(angA + angB + angC)}° = 180° (развёрнутый угол)`, w / 2, baseY + 34, w * 0.92, { color: Geo.ink(), font: "700 15px Rubik, sans-serif" });
@@ -5227,9 +5307,9 @@ const ANIMATORS = {
       // неподвижная часть (трапеция Dp-B-C-D)
       Figures.poly(ctx, [Dp, B, C, D], { fill: "rgba(91,107,214,0.18)", stroke: "#5b6bd6" });
       const area = Geo.areaShoelace([A, B, C, D]);
-      Figures.label(ctx, { x: w / 2, y: h * 0.06 }, prog >= 1
+      Figures.wrapText(ctx, prog >= 1
         ? `Прямоугольник той же площади: S = ${Geo.fmt(area)}`
-        : "Отрезаем треугольник слева и прикладываем справа →", { color: Geo.ink(), font: "600 14px Rubik, sans-serif" });
+        : "Отрезаем треугольник слева и прикладываем справа →", w / 2, h * 0.06, w * 0.92, { color: Geo.ink(), font: "600 14px Rubik, sans-serif" });
     }
     return {
       play() { playing = true; t0 = null; prog = 0; },
@@ -5615,8 +5695,36 @@ const State = {
     setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 300); }, 2600);
   }
 
+  /* ---------- звук: короткие тоны через Web Audio, с уважением к настройке "sound" ---------- */
+  const Sound = {
+    ctx: null,
+    ensureCtx() {
+      if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (this.ctx.state === "suspended") this.ctx.resume();
+      return this.ctx;
+    },
+    tone(freq, dur, type, peak) {
+      if (!State.data.settings.sound) return;
+      try {
+        const ctx = this.ensureCtx();
+        const osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.type = type || "sine"; osc.frequency.value = freq;
+        osc.connect(gain); gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(peak || 0.15, now + 0.012);
+        gain.gain.linearRampToValueAtTime(0.0001, now + dur);
+        osc.start(now); osc.stop(now + dur + 0.02);
+      } catch (e) { /* нет Web Audio на устройстве — просто без звука */ }
+    },
+    correct() { this.tone(660, 0.11, "sine", 0.14); setTimeout(() => this.tone(880, 0.13, "sine", 0.14), 85); },
+    wrong() { this.tone(200, 0.16, "sawtooth", 0.09); },
+    achievement() { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.15, "triangle", 0.15), i * 85)); },
+  };
+
   function announceUnlocks(unlocked) {
     if (!unlocked) return;
+    if (unlocked.length) Sound.achievement();
     unlocked.forEach((a) => setTimeout(() => toast(`Достижение: ${a.title}`, a.ico), 300));
   }
 
@@ -5903,9 +6011,18 @@ const State = {
   }
 
   /* ---------- Экзамен ---------- */
+  /* Параметрическая генерация: если у задания есть task.generate(), при каждом построении
+     пула практики/экзамена вычисляем СВЕЖИЕ q/answer — числа меняются при каждой попытке,
+     а не остаются одними и теми же навсегда. Исходный объект в GAME.topics не трогаем —
+     тема при обычном просмотре по-прежнему показывает канонический пример из учебника. */
+  function materialize(task) {
+    if (!task.generate) return task;
+    try { return Object.assign({}, task, task.generate()); }
+    catch (e) { console.error("generate() failed for", task.id, e); return task; }
+  }
   function allTasksPool() {
     const pool = [];
-    GAME.topics.forEach((t) => t.tasks.forEach((task) => { if (task.type === "choice" || task.type === "input") pool.push({ task, topic: t }); }));
+    GAME.topics.forEach((t) => t.tasks.forEach((task) => { if (task.type === "choice" || task.type === "input") pool.push({ task: materialize(task), topic: t }); }));
     return pool;
   }
   function buildExam() {
@@ -5981,7 +6098,7 @@ const State = {
   function chapterTaskPool(chId, grade) {
     const pool = [];
     topicsOfChapter(chId, grade).forEach((t) => t.tasks.forEach((task) => {
-      if (task.type === "choice" || task.type === "input") pool.push({ task, topic: t });
+      if (task.type === "choice" || task.type === "input") pool.push({ task: materialize(task), topic: t });
     }));
     return pool;
   }
@@ -6025,6 +6142,7 @@ const State = {
   function cpAnswer(idx) {
     const cp = ui.chPractice; const q = cp.items[cp.idx]; const t = q.task;
     cp.answered = idx; cp.correct = idx === t.correct;
+    Sound[cp.correct ? "correct" : "wrong"]();
     if (cp.correct) { cp.score++; const res = State.completeTask(t, q.topic.id); if (res && !res.already) announceUnlocks(res.unlocked); }
     render();
   }
@@ -6033,6 +6151,7 @@ const State = {
     const num = parseFloat(String(val).replace(",", "."));
     cp.correct = !isNaN(num) && Math.abs(num - t.answer) <= (t.tol || 0.5);
     cp.answered = "ok";
+    Sound[cp.correct ? "correct" : "wrong"]();
     if (cp.correct) { cp.score++; const res = State.completeTask(t, q.topic.id); if (res && !res.already) announceUnlocks(res.unlocked); }
     render();
   }
@@ -6084,7 +6203,9 @@ const State = {
   function ctAnswer(idx) {
     const t = ui.chapterTest; const q = t.items[t.idx]; const task = q.task;
     t.answered = idx;
-    if (idx === task.correct) t.score++;
+    const ok = idx === task.correct;
+    Sound[ok ? "correct" : "wrong"]();
+    if (ok) t.score++;
     else t.mistakes.push({ q: task.q, correctText: task.options[task.correct] });
     render();
   }
@@ -6093,6 +6214,7 @@ const State = {
     const num = parseFloat(String(val).replace(",", "."));
     const ok = !isNaN(num) && Math.abs(num - task.answer) <= (task.tol || 0.5);
     t.answered = "ok";
+    Sound[ok ? "correct" : "wrong"]();
     if (ok) t.score++;
     else t.mistakes.push({ q: task.q, correctText: String(task.answer) + (task.unit || "") });
     render();
@@ -6284,6 +6406,7 @@ const State = {
     if (act === "task-choice") {
       const task = findTask(node.getAttribute("data-task"));
       const res = Tasks.checkChoice(task, node.getAttribute("data-topic"), +node.getAttribute("data-idx"), ui);
+      ui.taskFb[task.id].correct ? Sound.correct() : Sound.wrong();
       if (res && !res.already) { toast(`+${res.xp} XP`, "⭐"); announceUnlocks(res.unlocked); }
       render();
       return;
@@ -6291,6 +6414,7 @@ const State = {
     if (act === "task-error") {
       const task = findTask(node.getAttribute("data-task"));
       const res = Tasks.checkError(task, node.getAttribute("data-topic"), +node.getAttribute("data-idx"), ui);
+      ui.taskFb[task.id].correct ? Sound.correct() : Sound.wrong();
       if (res && !res.already) { toast(`+${res.xp} XP`, "⭐"); announceUnlocks(res.unlocked); }
       render();
       return;
@@ -6302,6 +6426,7 @@ const State = {
       const figEl = card ? card.querySelector(".task-figure") : null;
       const task = findTask(taskId);
       const res = Tasks.checkInput(task, topicId, input ? input.value : "", ui, figEl);
+      ui.taskFb[taskId].correct ? Sound.correct() : Sound.wrong();
       if (res && !res.already) { toast(`+${res.xp} XP`, "⭐"); announceUnlocks(res.unlocked); }
       render();
       return;
@@ -6313,7 +6438,7 @@ const State = {
       if (!text) { toast("Сначала запиши свой вывод", "✏️"); return; }
       const task = findTask(taskId);
       const res = Tasks.saveExplore(task, topicId, text);
-      if (res && !res.already) { toast(`+${res.xp} XP`, "⭐"); announceUnlocks(res.unlocked); }
+      if (res && !res.already) { Sound.correct(); toast(`+${res.xp} XP`, "⭐"); announceUnlocks(res.unlocked); }
       render();
       return;
     }
@@ -6323,6 +6448,7 @@ const State = {
       const figEl = card ? card.querySelector(".task-figure") : null;
       const task = findTask(taskId);
       const res = Tasks.checkBuild(task, topicId, figEl, ui);
+      ui.taskFb[taskId].correct ? Sound.correct() : Sound.wrong();
       if (res && !res.already) { toast(`+${res.xp} XP`, "⭐"); announceUnlocks(res.unlocked); }
       render();
       return;
@@ -6334,6 +6460,7 @@ const State = {
       if (card) card.querySelectorAll(".match-select").forEach((sel) => { selMap[+sel.getAttribute("data-idx")] = sel.value; });
       const task = findTask(taskId);
       const res = Tasks.checkMatch(task, topicId, selMap, ui);
+      ui.taskFb[taskId].correct ? Sound.correct() : Sound.wrong();
       if (res && !res.already) { toast(`+${res.xp} XP`, "⭐"); announceUnlocks(res.unlocked); }
       render();
       return;
@@ -6345,7 +6472,9 @@ const State = {
       const ex = ui.exam; const q = ex.items[ex.idx].task;
       const idx = +node.getAttribute("data-idx");
       ex.answered = idx;
-      if (idx === q.correct) ex.score++; else ex.mistakes.push({ q: q.q, correctText: q.options[q.correct] });
+      const ok = idx === q.correct;
+      Sound[ok ? "correct" : "wrong"]();
+      if (ok) ex.score++; else ex.mistakes.push({ q: q.q, correctText: q.options[q.correct] });
       render();
       return;
     }
@@ -6355,6 +6484,7 @@ const State = {
       const val = parseFloat(String(input ? input.value : "").replace(",", "."));
       const ok = !isNaN(val) && Math.abs(val - q.answer) <= (q.tol || 0.5);
       ex.answered = ok ? "ok" : "bad";
+      Sound[ok ? "correct" : "wrong"]();
       if (ok) ex.score++; else ex.mistakes.push({ q: q.q, correctText: String(q.answer) });
       render();
       return;
